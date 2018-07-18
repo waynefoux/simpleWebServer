@@ -3,24 +3,13 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
 )
 
-func main() {
-
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/", Index)
-	router.HandleFunc("/todos", TodoIndex)
-	router.HandleFunc("/todos/{todoId}", TodoShow)
-
-	log.Fatal(http.ListenAndServe(":8080", router))
-}
-
 func Index(writer http.ResponseWriter, request *http.Request) {
-	fmt.Fprintf(writer, "Welcome!")
+	fmt.Fprintf(writer, "Welcome to the Index!")
 }
 
 func TodoIndex(writer http.ResponseWriter, request *http.Request) {
@@ -29,7 +18,9 @@ func TodoIndex(writer http.ResponseWriter, request *http.Request) {
 		Todo{Name: "Learn Go"},
 	}
 
-	json.NewEncoder(writer).Encode(todos)
+	if err := json.NewEncoder(writer).Encode(todos); err != nil {
+		panic(err)
+	}
 }
 
 func TodoShow(writer http.ResponseWriter, request *http.Request) {
